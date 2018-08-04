@@ -1,9 +1,11 @@
 package com.backend;
 
-import com.backend.profile.model.Profile;
+import com.backend.profile.data.EmployeeRepository;
+import com.backend.profile.model.Employee;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -11,12 +13,16 @@ import java.util.List;
 
 @Component
 public class DatabaseInitializer implements InitializingBean {
+
+    @Autowired
+    EmployeeRepository employeeRepository;
+
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<Profile> profiles = new ObjectMapper().readValue(
+        List<Employee> employees = new ObjectMapper().readValue(
                 ResourceUtils.getFile("classpath:employee.json"),
-                new TypeReference<List<Profile>>() {
+                new TypeReference<List<Employee>>() {
                 });
-        profiles.stream().forEach(e -> System.out.println(e.getName() + ":" + e.getJoindate()));
+        employees.forEach(employee -> employeeRepository.save(employee));
     }
 }
