@@ -2,7 +2,6 @@ package com.backend;
 
 import com.backend.profile.model.AgeFilter;
 import com.backend.profile.model.Employee;
-import com.backend.profile.model.SortOrder;
 import com.backend.profile.repository.EmployeeRepository;
 import com.backend.profile.service.EmployeeService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -11,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ResourceUtils;
 
@@ -26,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@ContextConfiguration(classes = BackendApplication.class)
 public class BackendApplicationTests {
 
     @Autowired
