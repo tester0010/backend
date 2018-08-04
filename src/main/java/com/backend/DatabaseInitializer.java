@@ -1,6 +1,6 @@
 package com.backend;
 
-import com.backend.profile.data.EmployeeRepository;
+import com.backend.profile.repository.EmployeeRepository;
 import com.backend.profile.model.Employee;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
