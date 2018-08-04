@@ -1,5 +1,6 @@
 package com.backend;
 
+import com.backend.profile.model.AgeFilter;
 import com.backend.profile.model.Employee;
 import com.backend.profile.model.SortOrder;
 import com.backend.profile.repository.EmployeeRepository;
@@ -17,6 +18,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.backend.profile.model.SortOrder.ASCENDING;
 import static com.backend.profile.model.SortOrder.DESCENDING;
@@ -70,6 +72,30 @@ public class BackendApplicationTests {
             } else {
                 assertTrue(current.getSalary().compareTo(previous.getSalary()) <= 0);
             }
+        });
+    }
+
+    @Test
+    public void EmployeesWithAge() {
+        employeeService.retrieveEmployeesByAge(25, Optional.empty()).subscribe(employee -> {
+            assertTrue(employee.getAge() == 25);
+        });
+        employeeService.retrieveEmployeesByAge(25, Optional.of(AgeFilter.EQUAL)).subscribe(employee -> {
+            assertTrue(employee.getAge() == 25);
+        });
+    }
+
+    @Test
+    public void EmployeesBelowAge() {
+        employeeService.retrieveEmployeesByAge(25, Optional.of(AgeFilter.ABOVE)).subscribe(employee -> {
+            assertTrue(employee.getAge() > 25);
+        });
+    }
+
+    @Test
+    public void EmployeesAboveAge() {
+        employeeService.retrieveEmployeesByAge(25, Optional.of(AgeFilter.BELOW)).subscribe(employee -> {
+            assertTrue(employee.getAge() < 25);
         });
     }
 }

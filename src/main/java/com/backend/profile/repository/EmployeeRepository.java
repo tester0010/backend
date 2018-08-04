@@ -11,4 +11,9 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
 
     @Query("FROM Employee ORDER BY salary desc")
     Iterable<Employee> findAllBySalaryDesc();
+
+    Iterable<Employee> findAllByAgeGreaterThan(int age);
+    Iterable<Employee> findAllByAgeLessThan(int age);
+    Iterable<Employee> findAllByAge(int age);
+
 }
