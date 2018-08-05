@@ -41,4 +41,8 @@ public class EmployeeService {
             default: return Flux.fromIterable(employeeRepository.findAllByAge(age));
         }
     }
+
+    public Flux<Employee> retrieveEmployees() {
+        return Flux.fromIterable(employeeRepository.findAll());
+    }
 }
