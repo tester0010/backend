@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
-import java.util.Optional;
-
 import static com.backend.profile.model.AgeFilter.EQUAL;
+import static java.util.Optional.of;
 
 @Service
 public class EmployeeService {
 
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
     EmployeeService(EmployeeRepository employeeRepository) {
@@ -33,8 +32,8 @@ public class EmployeeService {
         }
     }
 
-    public Flux<Employee> retrieveEmployeesByAge(int age, Optional<AgeFilter> ageFilter) {
-        switch (ageFilter.orElse(EQUAL)) {
+    public Flux<Employee> retrieveEmployeesByAge(int age, AgeFilter ageFilter) {
+        switch (of(ageFilter).orElse(EQUAL)) {
             case ABOVE: return Flux.fromIterable(employeeRepository.findAllByAgeGreaterThan(age));
             case BELOW: return Flux.fromIterable(employeeRepository.findAllByAgeLessThan(age));
             case EQUAL:

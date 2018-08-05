@@ -1,6 +1,5 @@
 package com.backend;
 
-import com.backend.profile.model.AgeFilter;
 import com.backend.profile.model.Employee;
 import com.backend.profile.repository.EmployeeRepository;
 import com.backend.profile.service.EmployeeService;
@@ -17,8 +16,8 @@ import org.springframework.util.ResourceUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import static com.backend.profile.model.AgeFilter.*;
 import static com.backend.profile.model.SortOrder.ASCENDING;
 import static com.backend.profile.model.SortOrder.DESCENDING;
 import static org.junit.Assert.assertEquals;
@@ -39,8 +38,7 @@ public class BackendApplicationTests {
     public static void init() throws IOException {
         employees = new ObjectMapper().readValue(
                 ResourceUtils.getFile("classpath:employee.json"),
-                new TypeReference<List<Employee>>() {
-                });
+                new TypeReference<List<Employee>>() {});
     }
 
     @Test
@@ -54,11 +52,10 @@ public class BackendApplicationTests {
     public void EmployeesSortedBySalaryAsc() {
         Employee previous = new Employee();
         employeeService.retrieveEmployeesSortedBySalary(ASCENDING).subscribe(current -> {
-            if (previous.getSalary() == null) {
-                previous.setSalary(current.getSalary());
-            } else {
+            if (previous.getSalary() != null) {
                 assertTrue(current.getSalary().compareTo(previous.getSalary()) >= 0);
             }
+            previous.setSalary(current.getSalary());
         });
     }
 
@@ -66,35 +63,30 @@ public class BackendApplicationTests {
     public void EmployeesSortedBySalaryDesc() {
         Employee previous = new Employee();
         employeeService.retrieveEmployeesSortedBySalary(DESCENDING).subscribe(current -> {
-            if (previous.getSalary() == null) {
-                previous.setSalary(current.getSalary());
-            } else {
+            if (previous.getSalary() != null) {
                 assertTrue(current.getSalary().compareTo(previous.getSalary()) <= 0);
             }
+            previous.setSalary(current.getSalary());
         });
     }
 
     @Test
     public void EmployeesWithAge() {
-        employeeService.retrieveEmployeesByAge(25, Optional.empty()).subscribe(employee -> {
-            assertTrue(employee.getAge() == 25);
-        });
-        employeeService.retrieveEmployeesByAge(25, Optional.of(AgeFilter.EQUAL)).subscribe(employee -> {
-            assertTrue(employee.getAge() == 25);
-        });
+        employeeService.retrieveEmployeesByAge(25, null)
+                .subscribe(employee -> assertTrue(employee.getAge() == 25));
+        employeeService.retrieveEmployeesByAge(25, EQUAL)
+                .subscribe(employee -> assertTrue(employee.getAge() == 25));
     }
 
     @Test
     public void EmployeesBelowAge() {
-        employeeService.retrieveEmployeesByAge(25, Optional.of(AgeFilter.ABOVE)).subscribe(employee -> {
-            assertTrue(employee.getAge() > 25);
-        });
+        employeeService.retrieveEmployeesByAge(25, ABOVE)
+                .subscribe(employee -> assertTrue(employee.getAge() > 25));
     }
 
     @Test
     public void EmployeesAboveAge() {
-        employeeService.retrieveEmployeesByAge(25, Optional.of(AgeFilter.BELOW)).subscribe(employee -> {
-            assertTrue(employee.getAge() < 25);
-        });
+        employeeService.retrieveEmployeesByAge(25, BELOW)
+                .subscribe(employee -> assertTrue(employee.getAge() < 25));
     }
 }

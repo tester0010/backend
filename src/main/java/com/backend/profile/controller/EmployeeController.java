@@ -11,13 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
-import java.util.Optional;
-
 @RestController
 @CrossOrigin
 public class EmployeeController {
 
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     @Autowired
     EmployeeController(EmployeeService employeeService) {
@@ -37,7 +35,7 @@ public class EmployeeController {
     @GetMapping({"employees/byAge/{age}", "employees/byAge/{age}/{ageFilter}"})
     public Flux<Employee> retrieveEmployeesByAge(
             @PathVariable int age,
-            @PathVariable(required = false) Optional<AgeFilter> ageFilter) {
+            @PathVariable(required = false) AgeFilter ageFilter) {
         return this.employeeService.retrieveEmployeesByAge(age, ageFilter);
     }
 }
